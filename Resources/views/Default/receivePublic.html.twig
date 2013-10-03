@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+li config
+<hr>
+<form action="{{ path('ccc_linkedin_importer_receivePublic') }}" method="get" {{ form_enctype(form) }}>
+	{{ form_widget(form) }}
+</form>
+
+<hr>
+
+<pre>
+{{ dump(profile_data) }}
+</pre>
+
+{% endblock %}

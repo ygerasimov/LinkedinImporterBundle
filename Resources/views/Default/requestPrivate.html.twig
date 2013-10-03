@@ -1,0 +1,11 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+li config
+<hr>
+<form action="{{ path('ccc_linkedin_importer_requestPrivate') }}" method="post" {{ form_enctype(form) }}>
+	{{ form_widget(form) }}
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,39 @@
+#Your application's api data.
+company: "SF Test"
+app_name: "sf test"
+api_key: "lzntsmkfr9fv"
+secret_key: "YluXrJz2RduK9nGZ"
+oauth_user_token: "38d15f0f-c627-4ac8-9055-29e9925ea03e"
+oauth_user_secret: "bd4bd9f7-1cf1-4ba9-823d-04ab692ee983"
+
+#linkedin's api urls. Do not change.
+urls:
+
+   #the page on linkedin's site where the user approves access to your application
+   auth: "https://www.linkedin.com/uas/oauth2/authorization"
+
+   #api url to get an access token for the current user
+   token: "https://www.linkedin.com/uas/oauth2/accessToken"
+
+   #api url to pull the current user's private data
+   private: "https://api.linkedin.com/v1/people/~"
+
+   #api url to pull any user's public data
+   public: "https://api.linkedin.com/v1/people/url="
+
+#name: 
+#   scope: ""   #the permissions needed from the current user to complete the action
+#   fields: ""  #the data you want back from linkedin, see http://developer.linkedin.com/documents/profile-fields for available fields 
+dataset:
+   #login or register a user
+   login:
+      scope: "r_emailaddress r_contactinfo"
+      fields: ":(first-name,last-name,location:(country:(code)),email-address)"
+   #pull anyone's public profile
+   public:
+      scope: ""
+      fields: ":(first-name,last-name,location:(country:(code)),headline,email-address,industry,summary,id,educations,positions:(id,title,summary,start-date,end-date,company,location),date-of-birth,phone-numbers,public-profile-url)"
+   #pull the current user's private profile
+   private:
+      scope: "r_emailaddress r_contactinfo r_fullprofile"
+      fields: ":(first-name,last-name,location:(country:(code)),headline,email-address,industry,summary,id,educations,positions:(id,title,summary,start-date,end-date,company,location),date-of-birth,phone-numbers,public-profile-url)"

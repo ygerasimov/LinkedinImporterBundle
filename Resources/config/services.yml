@@ -1,0 +1,6 @@
+parameters:
+
+services:
+   linkedin.importer:
+      class: CCC\LinkedinImporterBundle\Importer\Importer
+      arguments: ['@service_container']

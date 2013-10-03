@@ -1,0 +1,15 @@
+ccc_linkedin_importer_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: CCCLinkedinImporterBundle:Default:index }
+ccc_linkedin_importer_requestPrivate:
+    pattern: /request-private
+    defaults: { _controller: CCCLinkedinImporterBundle:Default:requestPrivate }
+ccc_linkedin_importer_receivePrivate:
+    pattern: /receive-private
+    defaults: { _controller: CCCLinkedinImporterBundle:Default:receivePrivate }
+ccc_linkedin_importer_requestPublic:
+    pattern: /request-public
+    defaults: { _controller: CCCLinkedinImporterBundle:Default:requestPublic }
+ccc_linkedin_importer_receivePublic:
+    pattern: /receive-public
+    defaults: { _controller: CCCLinkedinImporterBundle:Default:receivePublic }
