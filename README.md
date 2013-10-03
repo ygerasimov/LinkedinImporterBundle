@@ -42,7 +42,7 @@ See /LinkedinImporterBundle/DefaultController.php for examples
 ### Requesting User Permissions
 
 ``` php
-$importer	= $this->get('linkedin.importer');
+$importer = $this->get('linkedin.importer');
 $importer->setRedirect($url);
 $importer->requestPermission();
 ```
