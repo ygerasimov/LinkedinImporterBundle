@@ -1,10 +1,10 @@
 #Your application's api data.
 company: "SF Test"
 app_name: "sf test"
-api_key: "lzntsmkfr9fv"
-secret_key: "YluXrJz2RduK9nGZ"
-oauth_user_token: "38d15f0f-c627-4ac8-9055-29e9925ea03e"
-oauth_user_secret: "bd4bd9f7-1cf1-4ba9-823d-04ab692ee983"
+api_key: ""
+secret_key: ""
+oauth_user_token: ""
+oauth_user_secret: ""
 
 #linkedin's api urls. Do not change.
 urls:
