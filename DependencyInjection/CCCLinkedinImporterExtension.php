@@ -24,5 +24,15 @@ class CCCLinkedinImporterExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('apiconfig.yml');
+
+        // Add user's params to our param array
+        $params = $container->getParameter('ccc_linkedin_importer');
+        foreach ($config as $key => $param) {
+            $params[$key] = $param;
+        }
+
+        // Update in the container
+        $container->setParameter('ccc_linkedin_importer', $params);
     }
 }

@@ -29,7 +29,7 @@ class DefaultController extends Controller
     	$form 		= $this->createForm(new LiForm\RequestPrivate());
     	$request 	= $this->getRequest();
     	
-    	if($request->getMethod() == 'POST') {
+    	if($request->isMethod('POST')) {
 
     		$form->handleRequest($request);
     		

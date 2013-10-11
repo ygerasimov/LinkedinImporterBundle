@@ -4,6 +4,7 @@ namespace CCC\LinkedinImporterBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 /**
  * This is the class that validates and merges configuration from your app/config files
@@ -20,9 +21,34 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ccc_linkedin_importer');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->scalarNode('company')->isRequired()->end()
+                ->scalarNode('app_name')->isRequired()->end()
+                ->scalarNode('api_key')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('secret_key')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('oauth_user_token')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->validate()
+                        ->always(function ($value) {
+                            if (strlen($value) != 36) throw new InvalidTypeException('Invalid OAuth Token');
+                            return $value;
+                        })
+                    ->end()
+                ->end()
+                ->scalarNode('oauth_user_secret')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->validate()
+                        ->always(function ($value) {
+                            if (strlen($value) != 36) throw new InvalidTypeException('Invalid OAuth Secret');
+                            return $value;
+                        })
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

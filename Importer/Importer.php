@@ -26,17 +26,16 @@ class Importer {
 	}
 	
 	/**
-	 * Reads the api config yaml file
+	 * @todo Refactor.. not really necessary
 	 * @return array
 	 */
 	public function getConfig() {
 		if(!$this->_config) {
-	    	$parser	= new Parser();
-	    	$this->_config = $parser->parse(file_get_contents(__DIR__ . '/../Resources/config/apiconfig.yml'));
+	    	$this->_config = $this->_container->getParameter('ccc_linkedin_importer');
 		}
 		return $this->_config;
 	}
-	
+
 	/**
 	 * Returns the value of linkedin_state from the session
 	 * @return string
@@ -150,7 +149,8 @@ class Importer {
 	 * @throws Exception
 	 * @return NULL, stdClass
 	 */
-	public function requestPermission($type = 'private') {
+	public function requestPermission($type = 'private')
+    {
 		
 		if(!$this->getRedirect()) {
 			throw new \Exception('please set a redirect url for your permissions request');
@@ -158,21 +158,21 @@ class Importer {
 		
 		$config = $this->getConfig();
 		if(!isset($config['dataset'][$type])) {
+            // @todo Is this configurable?
 			throw new \Exception('unknown action. please check your apiconfig.yml file for the available types');
 		}
-		
+
 		$params 					= array();
 		$params['response_type'] 	= 'code';
 		$params['client_id'] 		= $config['api_key'];
-		$params['redirect_uri']		= $this->getRedirect();		
+		$params['redirect_uri']		= $this->getRedirect();
 		$params['scope'] 			= $config['dataset'][$type]['scope'];
 		$params['state']			= $this->resetState()->getState();
 
         $url = $config['urls']['auth'] . '?' . http_build_query($params);
 
 		return new RedirectResponse($url);
-
-	} 
+	}
 	
 	/**
 	 * Gets access token from linkedin
