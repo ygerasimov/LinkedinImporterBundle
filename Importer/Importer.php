@@ -16,7 +16,7 @@ class Importer {
 	protected $_redirect 			= null;	//url linkedin redirects to. must be present in all auth requests
 	protected $_access_token 		= null; //token received from linkedin to pull private data
 	protected $_public_profile_url 	= null; //linkedin url to pull public data
-	
+
 	/**
 	 * Sets handle to service container so we can get an instance of the session later
 	 * @param ContainerInterface $ci
@@ -184,8 +184,8 @@ class Importer {
 		
 		$config 				= $this->getConfig();
 		$redirect 				= $this->getRedirect();
-		
-		$token_url				= $config['urls']['token'];
+
+        $token_url				= $config['urls']['token'];
 		$params 				= array();
 		$params['client_id'] 	= $config['api_key'];
 		$params['redirect_uri']	= $redirect;
@@ -193,15 +193,18 @@ class Importer {
 		$params['grant_type']	= 'authorization_code';
 		$params['client_secret'] = $config['secret_key'];
 
-		//get access token
+
+        //get access token
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $token_url);
+        curl_setopt($ch, CURLOPT_URL, $token_url);
 		curl_setopt($ch, CURLOPT_VERBOSE, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);  // don't worry about bad ssl certs
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));  // @todo why post a get query?
 		
 		$response = curl_exec($ch);
+
 		if(!$response) {
 			throw new \Exception('no response from linkedin');
 		}
@@ -213,7 +216,7 @@ class Importer {
 		
 		$this->setAccessToken($response->access_token);
 		
-		return (string)$response->access_token;		
+		return (string)$response->access_token;
 	}
 	
 	/**
@@ -258,7 +261,8 @@ class Importer {
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_VERBOSE, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: en-US, ja"));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);  // don't worry about bad ssl certs
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: en-US, ja"));
 		$response = curl_exec($ch);
 		
 		$data = simplexml_load_string($response);
