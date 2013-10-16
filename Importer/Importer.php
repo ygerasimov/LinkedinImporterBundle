@@ -67,6 +67,14 @@ class Importer {
 		return $this;
 	}
 
+    /**
+     * Check that the given state value is value
+     */
+    public function isStateValid($value)
+    {
+        return ($this->getState() == $value);
+    }
+
 	/**
 	 * Returns linkedin auth code
 	 * @return string
