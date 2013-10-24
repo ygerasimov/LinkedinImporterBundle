@@ -35,8 +35,23 @@ public function registerBundles()
 $ php composer.phar update
 ```
 
+Configuration
+-------------
+
+Add LinkedIn access details to your config:
+
+``` yaml
+ccc_linkedin_importer:
+    company: Company Name
+    app_name: Application Name
+    api_key: <api key>
+    secret_key: <secret key>
+    oauth_user_token: <oauth user token>
+    oauth_user_secret: <oauth user secret>
+```
+
 Basic Usage
------
+-----------
 See /LinkedinImporterBundle/DefaultController.php for examples
 
 ### Requesting User Permissions
