@@ -2,37 +2,34 @@
 
 namespace CCC\LinkedinImporterBundle\Importer;
 
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Importer { 
 
-	protected $_container			= null; //handle to outside services
 	protected $_config 				= null;	//config options from file
 	protected $_state				= null;	//unique string passed between linkedin and here to prevent csrf attacks
 	protected $_code				= null;	//auth code returned from linkedin required for pulling private data
 	protected $_redirect 			= null;	//url linkedin redirects to. must be present in all auth requests
 	protected $_access_token 		= null; //token received from linkedin to pull private data
 	protected $_public_profile_url 	= null; //linkedin url to pull public data
+    protected $_session             = null;
 
-	/**
-	 * Sets handle to service container so we can get an instance of the session later
-	 * @param ContainerInterface $ci
-	 */
-	public function __construct(ContainerInterface $ci) {
-		$this->_container = $ci;
-	}
+    /**
+     * Handle to the session
+     */
+    public function __construct(Session $session, $config) {
+        $this->_session = $session;
+        $this->_config = $config;
+    }
 	
 	/**
 	 * @todo Refactor.. not really necessary
 	 * @return array
 	 */
 	public function getConfig() {
-		if(!$this->_config) {
-	    	$this->_config = $this->_container->getParameter('ccc_linkedin_importer');
-		}
 		return $this->_config;
 	}
 
@@ -41,8 +38,7 @@ class Importer {
 	 * @return string
 	 */
 	public function getState() {
-		$session = $this->_container->get('session');
-		return $session->get('linkedin_state');
+		return $this->_session->get('linkedin_state');
 	}
 	
 	/**
@@ -60,7 +56,7 @@ class Importer {
 		}
 		$value = (string)$value;
 		
-		$session = $this->_container->get('session');
+		$session = $this->_session;
 		$session->invalidate();
 		$session->set('linkedin_state', $value);
 

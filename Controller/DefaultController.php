@@ -91,7 +91,7 @@ class DefaultController extends Controller
     		$form->handleRequest($request);
     		
     		if($form->isValid()) {
-    			$form_data = $form->GetData();
+    			$form_data = $form->getData();
     			//add the other user's public profile url to the redirect 
 		    	$importer->setRedirect($this->generateUrl('ccc_linkedin_importer_receivePublic', array('submit'=>true, 'url' => urlencode($form_data['url'])), true));
 		    	//still need to ask the current user for permission to go through our app
