@@ -107,6 +107,33 @@ class Importer {
 		return $this;
 	}
 
+    /**
+     * Return the url of the LinkedIn authentication page
+     */
+    public function getAuthenticationUrl($type = 'private') {
+
+        if(!$this->getRedirect()) {
+            throw new \Exception('please set a redirect url for your permissions request');
+        }
+
+        $config = $this->getConfig();
+        if(!isset($config['dataset'][$type])) {
+            // @todo Is this configurable?
+            throw new \Exception('unknown action. please check your apiconfig.yml file for the available types');
+        }
+
+        $params = array();
+        $params['response_type'] = 'code';
+        $params['client_id'] = $config['api_key'];
+        $params['redirect_uri'] = $this->getRedirect();
+        $params['scope'] = $config['dataset'][$type]['scope'];
+        $params['state'] = $this->resetState()->getState();
+
+        $url = $config['urls']['auth'] . '?' . http_build_query($params);
+
+        return $url;
+    }
+
 	/**
 	 * Returns the url of the profile you are accessing when doing a public call 
 	 * @return string
@@ -148,34 +175,15 @@ class Importer {
 	 * Sends a permissions request to linkedin.
 	 * This function redirects to linkedin's site where it will prompt the user to allow access to your application.
 	 * If successful, linkedin will send the user back to the url set previously with $this->setRedirect()
-	 * 
+	 *
 	 * @param string $type
 	 * @throws Exception
 	 * @return NULL, stdClass
 	 */
-	public function requestPermission($type = 'private')
+	public function requestPermission($type)
     {
-		
-		if(!$this->getRedirect()) {
-			throw new \Exception('please set a redirect url for your permissions request');
-		}
-		
-		$config = $this->getConfig();
-		if(!isset($config['dataset'][$type])) {
-            // @todo Is this configurable?
-			throw new \Exception('unknown action. please check your apiconfig.yml file for the available types');
-		}
-
-		$params 					= array();
-		$params['response_type'] 	= 'code';
-		$params['client_id'] 		= $config['api_key'];
-		$params['redirect_uri']		= $this->getRedirect();
-		$params['scope'] 			= $config['dataset'][$type]['scope'];
-		$params['state']			= $this->resetState()->getState();
-
-        $url = $config['urls']['auth'] . '?' . http_build_query($params);
-
-		return new RedirectResponse($url);
+        $url = $this->getAuthenticationUrl($type);
+        return new RedirectResponse($url);
 	}
 	
 	/**
