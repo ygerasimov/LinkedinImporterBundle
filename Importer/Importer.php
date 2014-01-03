@@ -12,7 +12,6 @@ class Importer {
 	protected $_config 				= null;	//config options from file
 	protected $_state				= null;	//unique string passed between linkedin and here to prevent csrf attacks
 	protected $_code				= null;	//auth code returned from linkedin required for pulling private data
-	protected $_redirect 			= null;	//url linkedin redirects to. must be present in all auth requests
 	protected $_access_token 		= null; //token received from linkedin to pull private data
 	protected $_public_profile_url 	= null; //linkedin url to pull public data
     protected $_session             = null;
@@ -57,7 +56,7 @@ class Importer {
 		$value = (string)$value;
 		
 		$session = $this->_session;
-		$session->invalidate();
+		//$session->invalidate();  // @todo why were we invalidating the session?
 		$session->set('linkedin_state', $value);
 
 		return $this;
@@ -94,7 +93,7 @@ class Importer {
 	 * @return string
 	 */
 	public function getRedirect() {
-		return $this->_redirect;
+        return $this->_session->get('linkedin_redirect');
 	}
 	
 	/**
@@ -103,7 +102,7 @@ class Importer {
 	 * @return \CCC\LinkedinImporterBundle\Importer\Importer
 	 */
 	public function setRedirect($value) {
-		$this->_redirect = (string)$value;
+        $this->_session->set('linkedin_redirect', $value);
 		return $this;
 	}
 
@@ -180,7 +179,7 @@ class Importer {
 	 * @throws Exception
 	 * @return NULL, stdClass
 	 */
-	public function requestPermission($type)
+	public function requestPermission($type = 'private')
     {
         $url = $this->getAuthenticationUrl($type);
         return new RedirectResponse($url);
@@ -195,16 +194,14 @@ class Importer {
 	public function requestAccessToken() {
 		
 		$config 				= $this->getConfig();
-		$redirect 				= $this->getRedirect();
 
         $token_url				= $config['urls']['token'];
 		$params 				= array();
 		$params['client_id'] 	= $config['api_key'];
-		$params['redirect_uri']	= $redirect;
+		$params['redirect_uri']	= $this->getRedirect();
 		$params['code'] 		= $this->getCode();
 		$params['grant_type']	= 'authorization_code';
 		$params['client_secret'] = $config['secret_key'];
-
 
         //get access token
 		$ch = curl_init();
@@ -238,7 +235,7 @@ class Importer {
 	 * @param string $type
 	 * @param string $access_token
 	 * @throws \Exception
-	 * @return SimpleXMLElement
+	 * @return \SimpleXMLElement
 	 */
 	public function	requestUserData($type = 'private', $access_token = null) {
 		
