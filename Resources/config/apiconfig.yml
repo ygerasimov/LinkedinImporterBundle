@@ -25,8 +25,8 @@ parameters:
            #pull anyone's public profile
            public:
               scope: ""
-              fields: ":(first-name,last-name,location:(country:(code)),headline,email-address,industry,summary,id,educations,positions:(id,title,summary,start-date,end-date,company,location),date-of-birth,phone-numbers,public-profile-url,picture-url)"
+              fields: ":(first-name,last-name,location:(country:(code)),headline,email-address,industry,summary,id,educations,positions:(id,title,summary,start-date,end-date,company,location),date-of-birth,phone-numbers,public-profile-url,picture-url,skills)"
            #pull the current user's private profile
            private:
               scope: "r_emailaddress r_contactinfo r_fullprofile"
-              fields: ":(first-name,last-name,location:(country:(code)),headline,email-address,industry,summary,id,educations,positions:(id,title,summary,start-date,end-date,company,location),date-of-birth,phone-numbers,public-profile-url,picture-url)"
+              fields: ":(first-name,last-name,location:(country:(code)),headline,email-address,industry,summary,id,educations,positions:(id,title,summary,start-date,end-date,company,location),date-of-birth,phone-numbers,public-profile-url,picture-url,skills)"
